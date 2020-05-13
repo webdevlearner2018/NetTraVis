@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+
+{% block background %}	
+    style="background-image: url({{ url_for('static', filename='/images/upload-bg.jpg') }}); background-position: center;
+  background-repeat: repeat; background-size: cover; position: relative;"  
+{% endblock background %}
+
+
+{% block home_active %}
+	style="background-color: green; color: white;"
+{% endblock home_active %}
+
+{% block content %}
+	<div class="introduction">
+	<h2 style="color:green">Introduction</h2>
+	
+		<p>The group chose network traffic visualization to display network data visually using graphs, someone has lack of knowledge of reading a network data file would be able to read the graphs easily and clearly.</p>
+
+		<p>The aim of this project was to develop an application that the users can upload a network traffic data file (pcap file), choose the data to be displayed onto visual graphs. Data can be displayed in different protocols, different source  or destination IP addresses, different flags, etc. The users can also compare them against each other depending on what data the file contains.</p>
+
+		<p>This project was created for our third year group project for Digital Forensics and Cyber Security.</p> 
+		<p>The group supervisor:<br> 
+			&emsp;&emsp;<b>Dr Aurelia Power, PhD, BCBA.</b></p>
+		<p>The group members are:<br> 
+			&emsp;&emsp;<b>Emma Brady, Phong Vu and Thiago Maia.</b></p>
+		
+	</div>
+
+	
+{% endblock content %}

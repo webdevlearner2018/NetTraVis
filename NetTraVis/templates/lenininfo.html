@@ -1,0 +1,129 @@
+{% extends "layout.html" %}
+
+{% block visualization_active %}
+	style="background-color: green; color: white;"
+{% endblock visualization_active %}
+
+{% block content %}
+   
+   <h2>The Requency of Protocols and Len</h2>
+
+	  <table class="table table-striped">
+	    <thead>
+	      <tr>
+	        <th>Protocol | Len</th>	        
+	        {% for col in range(numofcolumns) %}
+	        <th>{{ groupbyLenInInfo.columns[col] }}</th>
+	        {% endfor %}	        
+	      </tr>
+	    </thead>
+
+	    <tbody>
+	   		{% for row in range(numofrows) %}	    
+		      <tr>
+		        <td>{{ groupbyLenInInfo.index[row] }}</td>
+		        {% for col in range(numofcolumns) %}
+		        	<td>{{ (groupbyLenInInfo.iloc[row,col]).astype('int64') }}</td>
+		        {% endfor %}		        
+		      </tr>
+	    	{% endfor %}	     
+	    </tbody>
+	  </table>
+	
+    <canvas style="border: 1px solid black; margin: 30px 0px;" id="chart"></canvas>
+
+    <script type="text/javascript">
+    	// get chart canvas
+		var canvas = document.getElementById("chart").getContext("2d"); 
+		//var canvas = document.querySelector('canvas').getContext('2d');
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+		
+		//Function to get random color for each bar 
+		function getRandomColor() 
+		{
+		    var letters = '0123456789ABCDEF'.split('');
+		    var color = '#';
+		    for (var i = 0; i < 6; i++ ) 
+		    {
+		        color += letters[Math.floor(Math.random() * 16)];
+		    }
+		    return color;
+		}
+		
+    	
+		var chart = new Chart(canvas, 
+		{
+			type: 'bar',
+
+			options: 
+			{
+				title: {display: true, text: 'THE FREQUENCY OF PROTOCOL AND LEN', fontSize: 20, fontColor: 'green'},
+		      	maintainAspectRatio: true,
+		      	legend: {display: true, position:'right'},
+		      	responsive: true,
+		      	scales: 
+		      	{
+		        	xAxes: 
+		        	[
+		          		{
+		            		scaleLabel: 
+		            		{
+				              display: true,
+				              labelString: 'Protocol',
+				              fontSize: 16
+		            		},
+		            		ticks: {min:0}		            		
+		          		}
+		        	],
+
+		        	yAxes: 
+		        	[
+		          		{
+		            		scaleLabel: 
+		            		{
+				              display: true,
+				              labelString: 'Frequency',
+				              fontSize: 16
+		            		},
+		            		ticks: {min:0}		            		
+		          		}
+		        	]
+		      	}
+		    },
+			
+		  	data: 
+		  	{
+		    	labels: 
+		    	[
+		    		{% for row in range(numofrows) %}     
+		    			"{{ groupbyLenInInfo.index[row] }}", 
+		    		{% endfor %}
+		    	],
+
+		    	datasets: 
+		    	[
+		      		{% for col in range(numofcolumns) %}
+		      		{   
+		      			//label for legend
+		      			label: "{{ groupbyLenInInfo.columns[col] }}",
+		      			backgroundColor: getRandomColor(),
+		      			stack: "Stack {{col}}",    		
+		        		data: 
+		        		[
+		        			{% for row in range(numofrows) %}			        			
+			    				"{{ groupbyLenInInfo.iloc[row,col] }}",			        			
+			        		{% endfor %}
+		        		]    								
+		      		},
+		      	{% endfor %}	
+		    	]
+		  	}		  	
+
+		});
+		
+</script>
+    
+ 
+{% endblock content %}
+	

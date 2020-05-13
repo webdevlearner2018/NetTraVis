@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+
+{% block details_active %}
+	style="background-color: green; color: white;"
+{% endblock details_active %}
+
+{% block content %}
+
+    <h2>Ouput Data</h2>
+    <div class="filterFunction">
+	    <h4>Choose an option and enter search key:</h4>
+	    <div class="options">
+		    <input type="radio" onclick="assignValue(0)" name="useroption" value="2" required>
+		    <label for="source" class="filter-lbl">Source</label>
+		    <input type="radio" onclick="assignValue(1)" name="useroption" value="3" required>
+		    <label for="destination" class="filter-lbl">Destination</label>
+		    <input type="radio" onclick="assignValue(2)" name="useroption" value="4" required>
+		    <label for="protocol" class="filter-lbl">Protocol</label>
+		    <input type="radio" onclick="assignValue(3)" name="useroption" value="6" required>
+		    <label for="info" class="filter-lbl">Info</label>
+		</div>	   
+    	<input type="text" id="userInput" onkeyup="myFunction()" placeholder="  Enter your search key.." title="Type in a name">
+    </div>
+    
+	  <table class="table table-striped" id="dataTable">
+	    <thead>
+	      <tr>
+	        <th>Fnum</th>
+	        <th>Time</th>
+	        <th>Source</th>	        
+	        <th>Destination</th>
+	        <th>Protocol</th>
+	        <th>Length</th>
+	        <th>Info</th>
+	      </tr>
+	    </thead>
+
+	    <tbody>
+	    {% for row in range(noofrows) %}	    	
+	      <tr>
+	        <td>{{ dataframe.Fnum[row] }}</td>
+	        <td>{{ (dataframe.Time[row]).round(6) }}</td>
+	        <td>{{ dataframe.Source[row] }}</td>
+	        <td>{{ dataframe.Destination[row] }}</td>
+	        <td>{{ dataframe.Protocol[row] }}</td>
+	        <td>{{ dataframe.Length[row] }}</td>
+	        <td>{{ dataframe.Info[row] }}</td>
+	      </tr>
+	    {% endfor %}	      
+	    </tbody>
+	  </table>
+
+
+	<script>
+		var column;
+		function assignValue(option){	   
+			column = document.getElementsByName("useroption")[option].value;
+		    return column;
+		}
+
+		function myFunction() {
+		  var input, filter, table, tr, td, i, txtValue;
+		  input = document.getElementById("userInput");
+		  filter = input.value.toUpperCase();
+		  table = document.getElementById("dataTable");
+		  tr = table.getElementsByTagName("tr");
+		  for (i = 0; i < tr.length; i++) {
+		    td = tr[i].getElementsByTagName("td")[column];
+		    if (td) {
+		      txtValue = td.textContent || td.innerText;
+		      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+		        tr[i].style.display = "";
+		      } else {
+		        tr[i].style.display = "none";
+		      }
+		    }       
+		  }
+		}
+	</script>
+
+{% endblock content %}

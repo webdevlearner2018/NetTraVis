@@ -1,0 +1,140 @@
+{% extends "layout.html" %}
+
+{% block visualization_active %}
+	style="background-color: green; color: white;"
+{% endblock visualization_active %}
+
+{% block content %}
+   
+	<div class="container">
+	  
+	  <br><h2>Group by Protocol and Source</h2><br>
+	  
+
+	  <table class="table table-striped">
+	    <thead>
+	      <tr>
+	        <th>Protocol, Source</th>        
+	        <th>Frequence</th>	                     
+	      </tr>
+	    </thead>
+
+	    <tbody>
+	   		{% for row in range(numofrows) %}	    
+		      <tr>
+		        <td>{{ groupbySrcnPro.index[row] }}</td>		        
+		        <td>{{ groupbySrcnPro.iloc[row] }}</td>		        	        
+		      </tr>
+	    	{% endfor %}	      
+
+	    </tbody>
+	  </table>
+	</div>
+
+	<canvas style="border: 1px solid black; margin: 30px 0px;" id="chart"></canvas>
+
+    <script type="text/javascript">
+    	// get chart canvas
+		var canvas = document.getElementById("chart").getContext("2d"); 
+		
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+
+		//Function to get random color for each bar 
+		function getRandomColor() 
+		{
+		    var letters = '0123456789ABCDEF'.split('');
+		    var color = '#';
+		    for (var i = 0; i < 6; i++ ) 
+		    {
+		        color += letters[Math.floor(Math.random() * 16)];
+		    }
+		    return color;
+		}
+				
+		//get the number of random colors and store them in the array
+		var colors = [];
+		for (var i = 0; i < {{numofrows}}; i++ )
+		{
+			colors.push(getRandomColor());
+		}
+
+		var chart = new Chart(canvas, 
+		{
+			type: 'horizontalBar',
+
+			options: 
+			{
+				title: {display: true, text: 'SOURCE-PROTOCOL CHART', fontSize: 20, fontColor: 'green'},
+		      	maintainAspectRatio: true,
+		      	legend: {display: false, position:'top'},
+		      	responsive: true,
+		      	scales: 
+		      	{
+		        	xAxes: 
+		        	[
+		          		{
+		            		scaleLabel: 
+		            		{
+				              display: true,
+				              labelString: 'Frequency',
+				              fontSize: 16
+		            		},
+		            		stacked: true,
+		            		ticks: {min:0}		            		
+		          		}
+		        	],
+
+		        	yAxes: 
+		        	[
+		          		{
+		            		scaleLabel: 
+		            		{
+				              display: true,
+				              labelString: 'Source - Protocol',
+				              fontSize: 16
+		            		},
+		            		stacked: true		            		
+		          		}
+		        	]
+		      	}
+		    },
+			
+		  	data: 
+		  	{
+		    	labels: 
+		    	[
+		    		{% for row in range(numofrows) %}    
+		    			"{{ groupbySrcnPro.index[row] }}", 
+		    		{% endfor %}
+		    	],
+
+		    	datasets: 
+		    	[
+		    	
+		      		{
+		      			label: "", /*[
+		      					{% for row in range(numofrows) %}
+		      						"{{ groupbySrcnPro.index[row] }}",
+		      					{% endfor %}
+		      					],*/
+		      			backgroundColor: colors,
+		      			//stack: "Stack {{col}}",    		
+		        		data: 
+		        		[
+		        			{% for row in range(numofrows) %}
+			        			
+			    					"{{ groupbySrcnPro.iloc[row] }}", 
+			        			
+			        		{% endfor %}
+		        		]    								
+		      		},
+		      
+		    	]
+		  	}		  	
+
+		});
+	</script>
+    
+{% endblock content %}
+	
